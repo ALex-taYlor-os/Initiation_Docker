@@ -47,7 +47,40 @@ sudo systemctl status docker
 | **Persistance**  | Stockée sur disque       | Éphémère sans volume   |
 | **Multiplicité** | 1 image → N conteneurs   | 1 conteneur = 1 exécution |
 
+### les instrcutions à connaitre
+## 2. Les instructions
+ 
+| Instruction | Rôle | Moment |
+|-------------|------|--------|
+| `FROM` | Image de base. Obligatoire, en premier (seul `ARG` peut la précéder) | Build |
+| `ARG` | Variable disponible **uniquement pendant le build** | Build |
+| `ENV` | Variable d'environnement **persistée** dans l'image | Build + Run |
+| `RUN` | Exécute une commande. Chaque `RUN` crée une couche | Build |
+| `COPY` | Copie des fichiers locaux dans l'image (**à privilégier**) | Build |
+| `ADD` | Comme `COPY` + URL distantes + décompression d'archives | Build |
+| `WORKDIR` | Répertoire de travail pour la suite, créé s'il n'existe pas | Build + Run |
+| `USER` | Utilisateur pour les instructions suivantes et à l'exécution | Build + Run |
+| `LABEL` | Métadonnées clé/valeur | — |
+| `EXPOSE` | **Documente** un port. Ne le publie pas (il faut `-p` au `docker run`) | — |
+| `VOLUME` | Déclare un point de montage pour des données persistantes | Run |
+| `CMD` | Commande par défaut, **remplaçable** au `docker run` | Run |
+| `ENTRYPOINT` | Exécutable **fixe** du conteneur (forçable avec `--entrypoint`) | Run |
+| `HEALTHCHECK` | Commande périodique de vérification de santé | Run |
+| `STOPSIGNAL` | Signal envoyé à l'arrêt du conteneur | Run |
+| `SHELL` | Shell utilisé par `RUN` (défaut : `/bin/sh -c`) | Build |
+| `ONBUILD` | Instruction déclenchée quand l'image sert de base à une autre | Build (image fille) |
+ 
+### Les comparaisons à connaître
+ 
+| | A | B |
+|---|---|---|
+| **ARG vs ENV** | `ARG` : build seulement, non persisté | `ENV` : conservé dans l'image, dispo à l'exécution |
+| **COPY vs ADD** | `COPY` : simple et transparent | `ADD` : seulement pour une archive ou une URL |
+| **CMD vs ENTRYPOINT** | `CMD` : commande/arguments par défaut, écrasables | `ENTRYPOINT` : exécutable fixe |
+ 
 
+
+### les différentes commandes
 | Catégorie | Commande | Description |
 |-----------|----------|-------------|
 | **Images** | `docker images` | Lister les images locales |
